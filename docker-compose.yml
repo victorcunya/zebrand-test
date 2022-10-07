@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  bd:
+    image: zebrand-db:dev
+    container_name: zebrand_db
+    build:
+      context: ./docker/postgres/
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data:rw
+    environment:
+      - POSTGRES_DB=local
+      - POSTGRES_USER=local
+      - POSTGRES_PASSWORD=local
+    ports:
+      - 5432:5432
+    restart: always
+
+networks:
+  default:
+    name: $DOCKER_NETWORK
+    external: true
