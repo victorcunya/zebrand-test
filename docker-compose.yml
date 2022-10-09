@@ -16,6 +16,20 @@ services:
       - 5432:5432
     restart: always
 
+  backend:
+    image: $IMAGE_BACKEND
+    container_name: $CONTAINER_BACKEND
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    command: /start
+    volumes:
+      - .:/app
+    ports:
+      - '8000:8000'
+    env_file:
+      - .env
+
 networks:
   default:
     name: $DOCKER_NETWORK

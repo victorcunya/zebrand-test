@@ -32,4 +32,4 @@ def test_create_product_with_auth(client, add_product, token):
 
     assert response.status_code == 200
     data = response.json()
-    assert data["id"] == 1
+    assert data["sku"] == body["sku"]

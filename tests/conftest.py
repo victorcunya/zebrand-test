@@ -22,7 +22,8 @@ def product():
         sku='12345678', 
         name='Laptop HP I5 - 16GB RAM', 
         price=3150,
-        brand='HP', 
+        brand='HP',
+        state=1
     )
     return product
 

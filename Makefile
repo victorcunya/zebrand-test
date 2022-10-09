@@ -35,6 +35,15 @@ network: ## verifica si existe la red, caso contrario la crea: make network
 		(docker network create $(DOCKER_NETWORK));\
 	fi
 
+log: ## mostrar logs: make log
+	@docker logs -f $(CONTAINER_BACKEND)
+
+status: ## mostrar estado: make status
+	@docker-compose -p $(PROJECT_NAME) ps
+
+ssh: ## acceder contenedor: make ssh
+	@docker exec -it $(CONTAINER_BACKEND) bash
+
 ## HELP TARGET ##
 help:
 	@printf "\033[31m%-22s %-59s %s\033[0m\n" "Target" " Help" "Usage"; \
