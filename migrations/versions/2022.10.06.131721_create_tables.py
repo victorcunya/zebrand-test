@@ -1,10 +1,10 @@
-"""create tables
+'''create tables
 
 Revision ID: 6f202fd77b28
 Revises: 
 Create Date: 2022-10-06 13:17:21.304754
 
-"""
+'''
 import sqlalchemy as sa
 from alembic import op
 

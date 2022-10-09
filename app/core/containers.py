@@ -1,8 +1,10 @@
 
 from app.config import settings
 from app.core.service.product import ProductService
+from app.core.service.user import UserService
 from app.infrastructure.adapters.postgres import Database
 from app.infrastructure.adapters.postgres.product import ProductDB
+from app.infrastructure.adapters.postgres.user import UserDB
 from dependency_injector import containers, providers
 
 
@@ -19,4 +21,12 @@ class Container(containers.DeclarativeContainer):
     product = providers.Factory(
         ProductService,
         repository=product_repo,
+    )
+    user_repo = providers.Factory(
+        UserDB,
+        session=db.provided.session
+    )
+    user = providers.Factory(
+        UserService,
+        repository=user_repo,
     )

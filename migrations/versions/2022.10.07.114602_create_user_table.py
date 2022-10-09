@@ -17,17 +17,34 @@ depends_on = None
 
 
 def upgrade() -> None:
-    op.create_table('user',
+    user_table = op.create_table('user',
         sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
         sa.Column('name', sa.String(length=80), nullable=False),
-        sa.Column('email', sa.String(length=80), nullable=False),
+        sa.Column('email', sa.String(length=80), unique=True, nullable=False),
         sa.Column('password', sa.String(length=250), nullable=False),
-        sa.Column('role', sa.Enum(UserRole), default=UserRole.user_role),
+        sa.Column('role', sa.Enum(UserRole), default=UserRole.USER_ROLE),
         sa.Column('state', sa.SmallInteger, default='1'),
         sa.PrimaryKeyConstraint('id')
     )
 
+    op.bulk_insert(user_table,
+        [
+            {
+                'name': 'admin',
+                'email': 'admin@admin.com',
+                'password': '$2b$12$ynjZtzZe4UzG5gQkPmD0cuf3AZxitdRw5Ko1ZZow2/CYYIH9ZiF7a',
+                'role': 'ADMIN_ROLE'
+            },
+             {
+                'name': 'user',
+                'email': 'user@admin.com',
+                'password': '$2b$12$2L2x.FhECHcxuUEzg/XDJup1aGCVQCLROgSp.27.kt1aE0OreTVyi',
+                'role': 'USER_ROLE'
+            },
+        ]
+    )
 
 
 def downgrade() -> None:
     op.drop_table('user')
+    sa.Enum(UserRole).drop(op.get_bind())

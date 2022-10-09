@@ -10,8 +10,8 @@ db = Database(settings.DATABASE_URL)
 
 
 class UserRole(enum.Enum):
-    admin_role = 'ADMIN_ROLE'
-    user_role = 'USER_ROLE'
+    ADMIN_ROLE = 'ADMIN_ROLE'
+    USER_ROLE = 'USER_ROLE'
 
 
 class ModelMixin:
@@ -71,6 +71,7 @@ class User(Base, ModelMixin):
     email = Column(
         String(80),
         nullable=False,
+        unique=True,
     )
     password = Column(
         String(250),
