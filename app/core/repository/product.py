@@ -21,3 +21,7 @@ class ProductRepository(metaclass=ABCMeta):
     @abstractmethod
     def get_by_id(self, pk: int):
         raise NotImplementedError
+
+    @abstractmethod
+    def delete(self, pk: int):
+        raise NotImplementedError

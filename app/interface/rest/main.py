@@ -10,6 +10,8 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 app = create_app()
 app.container = Container()
+product_service = app.container.product()
+user_service = app.container.user()
 
 router = APIRouter()
 
@@ -36,35 +38,50 @@ def create_product(
 ):
     if user.role != 'ADMIN_ROLE':
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    product_service = app.container.product()
     return product_service.create(body)
 
 @router.put("/products/{product_id}", tags=["Product"])
 def update_product(
     product_id: int,
-    body: product.ProductUpdate
+    body: product.ProductUpdate,
+    user: user.User = Depends(get_current_user)
 ):
-    product_service = app.container.product()
+    if user.role != 'ADMIN_ROLE':
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    product = product_service.get_by_id(product_id)
+    if not product or not product.state:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Product disabled"
+        )
     return product_service.update(product_id, body)
 
 @router.delete("/products/{product_id}", tags=["Product"])
-def delete_product(product_id: int):
-    product_service = app.container.product()
-    return {"delte": product_id}
+def delete_product(
+    product_id: int,
+    user: user.User = Depends(get_current_user)
+):
+    if user.role != 'ADMIN_ROLE':
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    product_service.delete(product_id)
+    return {"deleted": True}
 
 @router.get("/products", tags=["Product"])
 def get_products():
-    product_service = app.container.product()
     return product_service.get_all()
 
 @router.get("/products/{product_id}", tags=["Product"])
 def get_product_by_id(product_id: int):
-    product_service = app.container.product()
-    return product_service.get_by_id(product_id)
+    product = product_service.get_by_id(product_id)
+    if not product or not product.state:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Product disabled"
+        )
+    return product
 
 @router.post("/token", tags=["Auth"], response_model=user.Token)
 def create_access_token(data: user.TokenData):
-    user_service = app.container.user()
     user = user_service.authenticate_user(data.email, data.password)
     if not user:
         raise HTTPException(
@@ -81,7 +98,6 @@ def create_access_token(data: user.TokenData):
 
 @router.post("/users", tags=["User"], response_model=user.User)
 def create_user(data: user.UserCreate):
-    user_service = app.container.user()
     return user_service.create(data)
 
 

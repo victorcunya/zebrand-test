@@ -48,13 +48,13 @@ class UserDB(UserRepository):
                     UserModel.state,
                 ).filter_by(email=email).one()
                 return User(
-                id=user.id,
-                name=user.name,
-                email=user.email,
-                password=user.password,
-                role=UserRoleEnum(user.role.value),
-                state=user.state
-            )
+                    id=user.id,
+                    name=user.name,
+                    email=user.email,
+                    password=user.password,
+                    role=UserRoleEnum(user.role.value),
+                    state=user.state
+                )
         except NoResultFound:
             return None
 

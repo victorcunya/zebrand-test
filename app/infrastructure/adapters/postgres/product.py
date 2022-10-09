@@ -26,22 +26,16 @@ class ProductDB(ProductRepository):
             session.add(product)
             session.commit()
             session.refresh(product)
-            return product
+            return Product.from_orm(product)
 
     def update(self, pk, data):
         with self._session_factory() as session:
-            product = session.query(
-                ProductModel.id,
-                ProductModel.name,
-                ProductModel.sku,
-                ProductModel.brand,
-                ProductModel.price,
-            ).get(pk).\
+            product = session.query(ProductModel).get(pk).\
                 update(**data.dict())
             session.add(product)
             session.commit()
             session.refresh(product)
-            return product
+            return Product.from_orm(product)
 
     def get_all(self):
         list_products = []
@@ -52,7 +46,8 @@ class ProductDB(ProductRepository):
                 ProductModel.sku,
                 ProductModel.brand,
                 ProductModel.price,
-            ).all()
+                ProductModel.state
+            ).filter_by(state=1)
             for item in products:
                 list_products.append(Product.from_orm(item))
         return list_products
@@ -66,7 +61,17 @@ class ProductDB(ProductRepository):
                 ProductModel.sku,
                 ProductModel.brand,
                 ProductModel.price,
-            ).get(pk)
+                ProductModel.state,
+            ).filter_by(id=pk).one()
             if data:
                 product = Product.from_orm(data)
         return product
+
+    def delete(self, pk):
+        with self._session_factory() as session:
+            product = session.query(ProductModel).get(pk).\
+                update(**{"state": 0})
+            session.add(product)
+            session.commit()
+            session.refresh(product)
+            return product

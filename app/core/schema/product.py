@@ -11,6 +11,7 @@ class ProductBase(BaseModel):
 
 class Product(ProductBase):
     id: int
+    state: int
     class Config:
         orm_mode = True
 
