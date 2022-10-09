@@ -32,6 +32,8 @@ class User(UserCreate):
     id: int
     state: int
 
+    class Config:
+        orm_mode = True
 
 class UserUpdate(BaseModel):
     name: str

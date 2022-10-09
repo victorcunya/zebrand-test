@@ -5,6 +5,8 @@ Revises: 6f202fd77b28
 Create Date: 2022-10-07 11:46:02.813297
 
 """
+from datetime import datetime
+
 import sqlalchemy as sa
 from alembic import op
 from app.infrastructure.adapters.postgres.models import UserRole
@@ -24,6 +26,8 @@ def upgrade() -> None:
         sa.Column('password', sa.String(length=250), nullable=False),
         sa.Column('role', sa.Enum(UserRole), default=UserRole.USER_ROLE),
         sa.Column('state', sa.SmallInteger, default='1'),
+        sa.Column('created_at', sa.DateTime(timezone=True), nullable=True, default=datetime.now),
+        sa.Column('updated', sa.DateTime(timezone=True), nullable=True, default=datetime.now),
         sa.PrimaryKeyConstraint('id')
     )
 

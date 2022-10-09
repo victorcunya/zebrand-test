@@ -1,8 +1,10 @@
 
 import enum
+from datetime import datetime
 
 from app.config import settings
-from sqlalchemy import Column, Enum, Float, Integer, SmallInteger, String
+from sqlalchemy import (Column, DateTime, Enum, Float, Integer, SmallInteger,
+                        String)
 
 from . import Base, Database
 
@@ -55,6 +57,21 @@ class Product(Base, ModelMixin):
         String(20),
         nullable=False,
     )
+    state = Column(
+        SmallInteger,
+        default='1'
+    )
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=True,
+        default=datetime.now,
+    )
+    updated_at = Column(
+        DateTime(timezone=True),
+        nullable=True,
+        default=datetime.now,
+        onupdate=datetime.now,
+    )
 
 class User(Base, ModelMixin):
     __tablename__ = 'user'
@@ -85,3 +102,15 @@ class User(Base, ModelMixin):
         Enum(UserRole),
         nullable=False,
     )
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=True,
+        default=datetime.now,
+    )
+    updated_at = Column(
+        DateTime(timezone=True),
+        nullable=True,
+        default=datetime.now,
+        onupdate=datetime.now,
+    )
+

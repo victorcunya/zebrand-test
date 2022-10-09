@@ -11,5 +11,7 @@ def test_create_access_token(client, get_user):
         response = client.post("api/token", json=body)
     
     assert response.status_code == 200
-    print(response)
+    data = response.json()
+    assert data["access_token"] is not None
+    assert data['token_type'] == "bearer"
 

@@ -39,15 +39,22 @@ class UserDB(UserRepository):
     def get_user_by(self, email) -> User:
         try:
             with self._session_factory() as session:
-                user = session.query(UserModel).filter_by(email=email).one()
+                user = session.query(
+                    UserModel.id,
+                    UserModel.email,
+                    UserModel.name,
+                    UserModel.password,
+                    UserModel.role,
+                    UserModel.state,
+                ).filter_by(email=email).one()
                 return User(
-                    id=user.id,
-                    name=user.name,
-                    email=user.email,
-                    password=user.password,
-                    role=UserRoleEnum(user.role.value),
-                    state=user.state,
-                )
+                id=user.id,
+                name=user.name,
+                email=user.email,
+                password=user.password,
+                role=UserRoleEnum(user.role.value),
+                state=user.state
+            )
         except NoResultFound:
             return None
 

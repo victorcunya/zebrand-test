@@ -11,3 +11,10 @@ class ProductBase(BaseModel):
 
 class Product(ProductBase):
     id: int
+    class Config:
+        orm_mode = True
+
+
+class ProductUpdate(BaseModel):
+    price: float
+    brand: str

@@ -29,7 +29,7 @@ def product():
 @pytest.fixture
 def add_product(product):
     product_repo_mock = mock.Mock(spec=ProductDB)
-    product_repo_mock.create_return_value = product
+    product_repo_mock.create.return_value = product
     return product_repo_mock
 
 
@@ -49,14 +49,25 @@ def user():
 @pytest.fixture
 def add_user(user):
     user_repo_mock = mock.Mock(spec=UserDB)
-    user_repo_mock.create_return_value = user
+    user_repo_mock.create.return_value = user
     return user_repo_mock
 
 
 @pytest.fixture
 def get_user(user):
     user_repo_mock = mock.Mock(spec=UserDB)
-    user_repo_mock.get_user_by_return_value = user
+    user_repo_mock.get_user_by.return_value = user
     return user_repo_mock
 
 
+@pytest.fixture
+def token(client, get_user):
+    body = {
+        "email": "admin@admin.com",
+        "password": "admin"
+    }
+    with app.container.user_repo.override(get_user):
+        response = client.post("api/token", json=body)
+    
+    data = response.json()
+    return data['access_token']
