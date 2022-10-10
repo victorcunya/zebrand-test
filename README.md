@@ -11,8 +11,16 @@
 ### Pasos:
 
 1. Crear archivo .env en raíz del proyecto
+En configuración de correo colocar credenciales e.g.(mailtrap)
 ```sh
 DATABASE_URL=postgresql://local:local@zebrand_db/local
+SMTP_SERVER=smtp.mailtrap.io
+SMTP_PORT=2525
+SMTP_USERNAME=
+SMTP_PASSWORD=
+SMTP_USE_TLS=true
+EMAIL_DEFAULT_SENDER=no-reply@zebrand.mx
+EMAIL_RECIPIENTS='admin@admin.com'
 ```
 2. Construir imagenes (bd y backend)
 ```sh
@@ -39,4 +47,8 @@ password *admin*
 ```sh
 1. admin@admin.com  [ADMIN_ROLE]
 2. user@admin.com   [USER_ROLE]
+```
+8. Listar todos los comandos help
+```sh
+$ make
 ```

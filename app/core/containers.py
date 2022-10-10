@@ -7,6 +7,7 @@ from app.infrastructure.adapters.postgres import Database
 from app.infrastructure.adapters.postgres.product import ProductDB
 from app.infrastructure.adapters.postgres.tracking import TrackingDB
 from app.infrastructure.adapters.postgres.user import UserDB
+from app.infrastructure.adapters.rest.mail import MailSMTPAdapter
 from dependency_injector import containers, providers
 
 
@@ -23,6 +24,7 @@ class Container(containers.DeclarativeContainer):
     product = providers.Factory(
         ProductService,
         repository=product_repo,
+        mail_repository=MailSMTPAdapter(),
     )
     user_repo = providers.Factory(
         UserDB,

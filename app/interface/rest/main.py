@@ -63,7 +63,12 @@ def delete_product(
 ):
     if user.role != 'ADMIN_ROLE':
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    product_service.delete(product_id)
+    product = product_service.delete(product_id)
+    if not product:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Product not found"
+        )
     return {"deleted": True}
 
 @router.get("/products", tags=["Product"])

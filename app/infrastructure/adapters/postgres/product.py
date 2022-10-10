@@ -68,10 +68,13 @@ class ProductDB(ProductRepository):
             return None
 
     def delete(self, pk):
-        with self._session_factory() as session:
-            product = session.query(ProductModel).get(pk).\
-                update(**{"state": 0})
-            session.add(product)
-            session.commit()
-            session.refresh(product)
-            return product
+        try:
+            with self._session_factory() as session:
+                product = session.query(ProductModel).get(pk).\
+                    update(**{"state": 0})
+                session.add(product)
+                session.commit()
+                session.refresh(product)
+                return product
+        except Exception:
+            None
