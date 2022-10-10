@@ -81,7 +81,7 @@ def delete_product(
 def get_products(
     user: user.User = Depends(get_current_user)
 ):
-    if user.role != 'ADMIN_ROLE':
+    if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return product_service.get_all()
 
