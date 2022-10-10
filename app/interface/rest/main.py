@@ -22,7 +22,6 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         headers={"WWW-Authenticate": "Bearer"}
     )
     try:
-        user_service = app.container.user()
         user = await user_service.get_current_user(token)
         if user is None:
             raise credential_exception
