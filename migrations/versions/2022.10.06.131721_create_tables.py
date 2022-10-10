@@ -19,7 +19,7 @@ def upgrade() -> None:
     op.create_table('product',
         sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
         sa.Column('name', sa.String(length=80), nullable=False),
-        sa.Column('sku', sa.String(length=30), nullable=False),
+        sa.Column('sku', sa.String(length=30), unique=True, nullable=False),
         sa.Column('brand', sa.String(length=20), nullable=False),
         sa.Column('price', sa.Float(7,2), default='0,0'),
         sa.Column('state', sa.SmallInteger, default='1'),

@@ -5,6 +5,7 @@ from typing import Callable
 
 from app.core.repository.product import ProductRepository
 from app.core.schema.product import Product
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from .models import Product as ProductModel
@@ -16,17 +17,20 @@ class ProductDB(ProductRepository):
         self._session_factory = session
 
     def create(self, data):
-        with self._session_factory() as session:
-            product = ProductModel(
-                sku=data.sku,
-                name=data.name,
-                price=data.price,
-                brand=data.brand,
-            )
-            session.add(product)
-            session.commit()
-            session.refresh(product)
-            return Product.from_orm(product)
+        try:
+            with self._session_factory() as session:
+                product = ProductModel(
+                    sku=data.sku,
+                    name=data.name,
+                    price=data.price,
+                    brand=data.brand,
+                )
+                session.add(product)
+                session.commit()
+                session.refresh(product)
+                return Product.from_orm(product)
+        except IntegrityError:
+            return None
 
     def update(self, pk, data):
         with self._session_factory() as session:

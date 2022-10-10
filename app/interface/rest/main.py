@@ -38,7 +38,13 @@ def create_product(
 ):
     if user.role != 'ADMIN_ROLE':
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    return product_service.create(body)
+    product = product_service.create(body)
+    if not product:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Product sku {body.sku} already exists."
+        )
+    return product
 
 @router.put("/products/{product_id}", tags=["Product"])
 def update_product(
@@ -127,7 +133,7 @@ def create_user(
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"email {data.email} ya existe"
+            detail=f"email {data.email} already exists."
         )
     return user
 
