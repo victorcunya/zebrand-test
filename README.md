@@ -12,7 +12,7 @@
 
 1. Crear archivo .env en raíz del proyecto
 ```sh
-DATABASE_URL=postgresql://local:local@db/local
+DATABASE_URL=postgresql://local:local@zebrand_db/local
 ```
 2. Construir imagenes (bd y backend)
 ```sh

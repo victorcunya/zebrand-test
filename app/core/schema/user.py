@@ -2,7 +2,7 @@
 from enum import Enum
 from typing import Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 
 class Token(BaseModel):
@@ -23,7 +23,7 @@ class UserRoleEnum(str, Enum):
 
 class UserCreate(BaseModel):
     name: str
-    email: str
+    email: EmailStr
     password: str
     role: UserRoleEnum
 

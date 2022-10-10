@@ -35,7 +35,7 @@ def add_product(product):
 
 
 @pytest.fixture
-def user():
+def user_admin():
     user = User(
         id=1,
         name='admin',
@@ -46,28 +46,42 @@ def user():
     )
     return user
 
+@pytest.fixture
+def user_anonymous():
+    user = User(
+        id=2,
+        name='user',
+        email='user@admin.com',
+        password='$2b$12$mvfcIU6Hu3VQqrOYQ.ucNeebJNNF7bDdKAOdcLL9jUlhyKjoGkfD6',
+        role='USER_ROLE',
+        state=1
+    )
+    return user
+
 
 @pytest.fixture
-def add_user(user):
+def add_user_admin(user_admin):
     user_repo_mock = mock.Mock(spec=UserDB)
-    user_repo_mock.create.return_value = user
+    user_repo_mock.create.return_value = user_admin
+    user_repo_mock.get_user_by.return_value = user_admin
     return user_repo_mock
 
 
 @pytest.fixture
-def get_user(user):
+def add_user_anonymous(user_anonymous):
     user_repo_mock = mock.Mock(spec=UserDB)
-    user_repo_mock.get_user_by.return_value = user
+    user_repo_mock.create.return_value = user_anonymous
+    user_repo_mock.get_user_by.return_value = user_anonymous
     return user_repo_mock
 
 
 @pytest.fixture
-def token(client, get_user):
+def token(client, user_admin):
     body = {
         "email": "admin@admin.com",
         "password": "admin"
     }
-    with app.container.user_repo.override(get_user):
+    with app.container.user_repo.override(user_admin):
         response = client.post("api/token", json=body)
     
     data = response.json()

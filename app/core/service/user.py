@@ -55,5 +55,8 @@ class UserService:
         if user is None:
             return None
         return user
-        
     
+    def delete(self, id):
+        return self._repository.delete(id)
+
+  

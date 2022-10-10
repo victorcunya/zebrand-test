@@ -114,3 +114,25 @@ class User(Base, ModelMixin):
         onupdate=datetime.now,
     )
 
+class Tracking(Base, ModelMixin):
+    __tablename__ = 'tracking'
+
+    id = Column(
+        Integer,
+        primary_key=True,
+        autoincrement=True,
+    )
+    entity = Column(
+        String(50),
+        nullable=False,
+    )
+    data_id = Column(
+        String(20),
+        nullable=True,
+    )
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=True,
+        default=datetime.now,
+    )
+

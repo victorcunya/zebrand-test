@@ -53,19 +53,19 @@ class ProductDB(ProductRepository):
         return list_products
 
     def get_by_id(self, pk):
-        product = None
-        with self._session_factory() as session:
-            data = session.query(
-                ProductModel.id,
-                ProductModel.name,
-                ProductModel.sku,
-                ProductModel.brand,
-                ProductModel.price,
-                ProductModel.state,
-            ).filter_by(id=pk).one()
-            if data:
-                product = Product.from_orm(data)
-        return product
+        try:
+            with self._session_factory() as session:
+                data = session.query(
+                    ProductModel.id,
+                    ProductModel.name,
+                    ProductModel.sku,
+                    ProductModel.brand,
+                    ProductModel.price,
+                    ProductModel.state,
+                ).filter_by(id=pk).one()
+            return Product.from_orm(data)
+        except Exception:
+            return None
 
     def delete(self, pk):
         with self._session_factory() as session:
