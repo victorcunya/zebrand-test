@@ -10,7 +10,7 @@
 
 ### Pasos:
 
-1. Configurar variable de entorno .env, por ejemplo
+1. Crear archivo .env en raíz del proyecto
 ```sh
 DATABASE_URL=postgresql://local:local@db/local
 ```

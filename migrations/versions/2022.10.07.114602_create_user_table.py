@@ -27,7 +27,7 @@ def upgrade() -> None:
         sa.Column('role', sa.Enum(UserRole), default=UserRole.USER_ROLE),
         sa.Column('state', sa.SmallInteger, default='1'),
         sa.Column('created_at', sa.DateTime(timezone=True), nullable=True, default=datetime.now),
-        sa.Column('updated', sa.DateTime(timezone=True), nullable=True, default=datetime.now),
+        sa.Column('updated_at', sa.DateTime(timezone=True), nullable=True, default=datetime.now),
         sa.PrimaryKeyConstraint('id')
     )
 

@@ -58,9 +58,20 @@ class UserDB(UserRepository):
         except NoResultFound:
             return None
 
-    def update(self, data) -> User:
+    def update(self, pk, data) -> User:
         try:
             with self._session_factory() as session:
-                session
+                user = session.query(UserModel).get(pk).update(**data.dict())
+                session.add(user)
+                session.commit()
+                session.refresh(user)
+                return User(
+                    id=user.id,
+                    name=user.name,
+                    email=user.email,
+                    password=user.password,
+                    role=UserRoleEnum(user.role.value),
+                    state=user.state
+            )
         except Exception as e:
             raise e

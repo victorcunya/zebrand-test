@@ -15,5 +15,5 @@ class UserRepository(metaclass=ABCMeta):
         raise NotImplementedError
 
     @abstractmethod
-    def update(self, data: UserUpdate) -> User:
+    def update(self, id: int, data: UserUpdate) -> User:
         raise NotImplementedError

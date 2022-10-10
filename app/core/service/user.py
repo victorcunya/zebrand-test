@@ -2,7 +2,7 @@
 from datetime import datetime, timedelta
 
 from app.core.repository.user import UserRepository
-from app.core.schema.user import Token, TokenData, User, UserCreate
+from app.core.schema.user import Token, TokenData, User, UserCreate, UserUpdate
 
 from .utils.jwt import (decode_jwt, encode_jwt, get_password_hash,
                         verify_password)
@@ -17,6 +17,10 @@ class UserService:
     def create(self, data: UserCreate):
         data.password = get_password_hash(data.password)
         return self._repository.create(data)
+
+    def update(self, id: int, data: UserUpdate):
+        data.password = get_password_hash(data.password)
+        return self._repository.update(id, data)
 
     def get_user_by(self, email: str):
         return self._repository.get_user_by(email)

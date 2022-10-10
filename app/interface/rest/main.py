@@ -99,6 +99,17 @@ def create_access_token(data: user.TokenData):
 def create_user(data: user.UserCreate):
     return user_service.create(data)
 
-
+@router.put("/users/{user_id}", tags=["User"], response_model=user.User)
+def update_user(
+    user_id: int,
+    data: user.UserUpdate,
+    user: user.User = Depends(get_current_user)
+):
+    if user.id != user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Can't update, belongs to user {user.email} - ID:{user.id}"
+        )
+    return user_service.update(user_id, data)
 
 app.include_router(router, prefix="/api")
