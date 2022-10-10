@@ -1,7 +1,6 @@
 
-
 from contextlib import AbstractAsyncContextManager
-from typing import Callable
+from typing import Callable, Union
 
 from app.core.repository.user import UserRepository
 from app.core.schema.user import User, UserRoleEnum
@@ -39,7 +38,7 @@ class UserDB(UserRepository):
         except IntegrityError:
             return None
 
-    def get_user_by(self, email) -> User:
+    def get_user_by(self, email) -> Union[User, None]:
         try:
             with self._session_factory() as session:
                 user = session.query(
@@ -61,7 +60,7 @@ class UserDB(UserRepository):
         except NoResultFound:
             return None
 
-    def update(self, pk, data) -> User:
+    def update(self, pk, data) -> Union[User, None]:
         try:
             with self._session_factory() as session:
                 user = session.query(UserModel).get(pk).update(**data.dict())
@@ -76,14 +75,17 @@ class UserDB(UserRepository):
                     role=UserRoleEnum(user.role.value),
                     state=user.state
             )
-        except Exception as e:
-            raise e
+        except AttributeError:
+            return None
 
     def delete(self, pk):
-        with self._session_factory() as session:
-            user = session.query(UserModel).get(pk).\
-                update(**{"state": 0})
-            session.add(user)
-            session.commit()
-            session.refresh(user)
-            return user
+        try:
+            with self._session_factory() as session:
+                user = session.query(UserModel).get(pk).\
+                    update(**{"state": 0})
+                session.add(user)
+                session.commit()
+                session.refresh(user)
+                return user
+        except Exception:
+            return None

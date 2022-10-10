@@ -1,4 +1,6 @@
 
+from typing import Union
+
 from app.core.containers import Container
 from app.core.schema import product, tracking, user
 from app.interface.rest import create_app
@@ -137,18 +139,27 @@ def create_user(
         )
     return user
 
-@router.put("/users/{user_id}", tags=["User"], response_model=user.User)
+@router.put(
+    "/users/{user_id}", tags=["User"], 
+    response_model=Union[user.User, None]
+)
 def update_user(
     user_id: int,
     data: user.UserUpdate,
     user: user.User = Depends(get_current_user)
 ):
-    if user.id != user_id:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Can't update, belongs to user {user.email} - ID:{user.id}"
-        )
-    return user_service.update(user_id, data)
+    if user.role == 'ADMIN_ROLE' or user.id == user_id:
+        user = user_service.update(user_id, data)
+        if user is None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"User with id {user_id} not found"
+            )
+        return user
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail=f"Can't update, belongs to user {user.email} - ID:{user.id}"
+    )
 
 @router.delete("/users/{user_id}", tags=["User"])
 def delete_user(
@@ -157,7 +168,12 @@ def delete_user(
 ):
     if user.role != 'ADMIN_ROLE':
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    user_service.delete(user_id)
+    user = user_service.delete(user_id)
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"User with id {user_id} not found"
+        )
     return {"deleted": True}
 
 
