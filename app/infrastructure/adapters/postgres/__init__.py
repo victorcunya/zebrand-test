@@ -12,12 +12,12 @@ Base = declarative_base()
 class Database:
 
     def __init__(self, db_url) -> None:
-        engine = create_engine(db_url)
+        self._engine = create_engine(db_url)
         self._session_factory = orm.scoped_session(
             orm.sessionmaker(
                 autocommit=False,
                 autoflush=False,
-                bind=engine,
+                bind=self._engine,
                 expire_on_commit=False
             )
         )

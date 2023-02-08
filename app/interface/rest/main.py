@@ -1,20 +1,19 @@
 
 from typing import Union
 
-from app.core.containers import Container
-from app.core.schema import product, tracking, user
-from app.interface.rest import create_app
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError
 
+from app.core.schema import product, tracking, user
+from app.interface.rest import create_app
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 app = create_app()
-app.container = Container()
-product_service = app.container.product()
-user_service = app.container.user()
-tracking_service = app.container.tracking()
+product_service = app.container.product_service()
+user_service = app.container.user_service()
+tracking_service = app.container.tracking_service()
 
 router = APIRouter()
 

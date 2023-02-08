@@ -11,19 +11,19 @@ ACCESS_TOKEN_EXPIRES_MINUTES = 30
 
 class UserService:
     
-    def __init__(self, repository: UserRepository):
-        self._repository = repository
+    def __init__(self, user_repository: UserRepository):
+        self._user_repository = user_repository
 
     def create(self, data: UserCreate):
         data.password = get_password_hash(data.password)
-        return self._repository.create(data)
+        return self._user_repository.create(data)
 
     def update(self, id: int, data: UserUpdate):
         data.password = get_password_hash(data.password)
-        return self._repository.update(id, data)
+        return self._user_repository.update(id, data)
 
     def get_user_by(self, email: str):
-        return self._repository.get_user_by(email)
+        return self._user_repository.get_user_by(email)
 
     def authenticate_user(self, email: str, password: str):
         user = self.get_user_by(email)
@@ -57,6 +57,6 @@ class UserService:
         return user
     
     def delete(self, id):
-        return self._repository.delete(id)
+        return self._user_repository.delete(id)
 
   

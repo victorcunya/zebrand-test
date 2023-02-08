@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 
+from app.core.containers import Container
+
 
 def create_app() -> FastAPI:
     app = FastAPI(
@@ -15,5 +17,5 @@ def create_app() -> FastAPI:
         docs_url="/api/docs",
         openapi_url="/api/openapi.json",
     )
-
-    return app;
+    app.container = Container()
+    return app

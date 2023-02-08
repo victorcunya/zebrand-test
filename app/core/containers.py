@@ -1,4 +1,6 @@
 
+from dependency_injector import containers, providers
+
 from app.config import settings
 from app.core.service.product import ProductService
 from app.core.service.tracking import TrackingService
@@ -8,7 +10,6 @@ from app.infrastructure.adapters.postgres.product import ProductDB
 from app.infrastructure.adapters.postgres.tracking import TrackingDB
 from app.infrastructure.adapters.postgres.user import UserDB
 from app.infrastructure.adapters.rest.mail import MailSMTPAdapter
-from dependency_injector import containers, providers
 
 
 class Container(containers.DeclarativeContainer):
@@ -17,28 +18,28 @@ class Container(containers.DeclarativeContainer):
         Database,
         db_url=settings.DATABASE_URL
     )
-    product_repo = providers.Factory(
+    product_repository = providers.Factory(
         ProductDB,
         session=db.provided.session
     )
-    product = providers.Factory(
+    product_service = providers.Factory(
         ProductService,
-        repository=product_repo,
+        product_repository=product_repository,
         mail_repository=MailSMTPAdapter(),
     )
-    user_repo = providers.Factory(
+    user_repository = providers.Factory(
         UserDB,
         session=db.provided.session
     )
-    user = providers.Factory(
+    user_service = providers.Factory(
         UserService,
-        repository=user_repo,
+        user_repository=user_repository,
     )
-    tracking_repo = providers.Factory(
+    tracking_repository = providers.Factory(
         TrackingDB,
         session=db.provided.session
     )
-    tracking = providers.Factory(
+    tracking_service = providers.Factory(
         TrackingService,
-        repository=tracking_repo,
+        tracking_repository=tracking_repository,
     )

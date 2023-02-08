@@ -8,17 +8,17 @@ from app.core.schema.product import ProductUpdate
 class ProductService:
 
     def __init__(self, 
-        repository: ProductRepository, 
+        product_repository: ProductRepository, 
         mail_repository: MailRepository
     ):
-        self._repository = repository
+        self._product_repository = product_repository
         self._mail_repository = mail_repository
 
     def create(self, data):
-        return self._repository.create(data)
+        return self._product_repository.create(data)
 
     def update(self, id, data: ProductUpdate):
-        product = self._repository.update(id, data)
+        product = self._product_repository.update(id, data)
         if product:
             mail = MailBase(
                 subject=f'Updated Product #{id}', 
@@ -28,13 +28,13 @@ class ProductService:
         return product
 
     def get_all(self):
-        return self._repository.get_all()
+        return self._product_repository.get_all()
 
     def get_by_id(self, id):
-        return self._repository.get_by_id(id)
+        return self._product_repository.get_by_id(id)
 
     def delete(self, id):
-        product = self._repository.delete(id)
+        product = self._product_repository.delete(id)
         if product:
             mail = MailBase(
                 subject=f'Deleted Product #{id}', 

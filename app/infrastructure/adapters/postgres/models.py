@@ -2,9 +2,10 @@
 import enum
 from datetime import datetime
 
-from app.config import settings
 from sqlalchemy import (Column, DateTime, Enum, Float, Integer, SmallInteger,
                         String)
+
+from app.config import settings
 
 from . import Base, Database
 
@@ -26,6 +27,7 @@ class ModelMixin:
         for attr, value in kw.items():
             setattr(self, attr, value)
         return self
+
 
 class Product(Base, ModelMixin):
 
@@ -72,6 +74,7 @@ class Product(Base, ModelMixin):
         default=datetime.now,
         onupdate=datetime.now,
     )
+
 
 class User(Base, ModelMixin):
     __tablename__ = 'user'

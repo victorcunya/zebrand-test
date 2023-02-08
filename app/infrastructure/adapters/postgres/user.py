@@ -2,10 +2,11 @@
 from contextlib import AbstractAsyncContextManager
 from typing import Callable, Union
 
-from app.core.repository.user import UserRepository
-from app.core.schema.user import User, UserRoleEnum
 from sqlalchemy.exc import IntegrityError, NoResultFound
 from sqlalchemy.orm import Session
+
+from app.core.repository.user import UserRepository
+from app.core.schema.user import User, UserRoleEnum
 
 from .models import User as UserModel
 
